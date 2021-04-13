@@ -3,6 +3,7 @@ import * as GraphQLScalars from "graphql-scalars";
 import { Prisma } from "../../client";
 import { DecimalJSScalar } from "../scalars";
 import { Movie } from "../models/Movie";
+import { DirectorCountOutputType } from "../resolvers/outputs/DirectorCountOutputType";
 
 @TypeGraphQL.ObjectType({
   isAbstract: true
@@ -19,4 +20,9 @@ export class Director {
   lastName!: string;
 
   movies?: Movie[];
+
+  @TypeGraphQL.Field(_type => DirectorCountOutputType, {
+    nullable: true
+  })
+  _count?: DirectorCountOutputType | null;
 }

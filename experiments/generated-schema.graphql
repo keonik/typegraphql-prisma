@@ -213,6 +213,7 @@ input CategoryWhereUniqueInput {
 
 """User model doc"""
 type Client {
+  _count: UserCountOutputType
   accountBalance: Float!
   age: Int!
   aliases: [String!]!
@@ -550,6 +551,7 @@ input ClientWhereUniqueInput {
 }
 
 type Creator {
+  _count: CreatorCountOutputType
   id: Int!
   likes(cursor: ProblemWhereUniqueInput, distinct: [ProblemScalarFieldEnum!], orderBy: [ProblemOrderByWithRelationInput!], skip: Int, take: Int, where: ProblemWhereInput): [Problem!]!
   name: String!
@@ -564,6 +566,11 @@ type CreatorCountAggregate {
   _all: Int!
   id: Int!
   name: Int
+}
+
+type CreatorCountOutputType {
+  likes: Int!
+  problems: Int!
 }
 
 input CreatorCreateInput {
@@ -826,6 +833,7 @@ input DecimalNullableWithAggregatesFilter {
 }
 
 type Director {
+  _count: DirectorCountOutputType
   firstName: String!
   lastName: String!
   movies(cursor: MovieWhereUniqueInput, distinct: [MovieScalarFieldEnum!], orderBy: [MovieOrderByWithRelationInput!], skip: Int, take: Int, where: MovieWhereInput): [Movie!]!
@@ -835,6 +843,10 @@ type DirectorCountAggregate {
   _all: Int!
   firstName: Int
   lastName: Int
+}
+
+type DirectorCountOutputType {
+  movies: Int!
 }
 
 input DirectorCreateInput {
@@ -2305,6 +2317,7 @@ input PostWhereUniqueInput {
 }
 
 type Problem {
+  _count: ProblemCountOutputType
   creator: Creator
   creatorId: Int
   id: Int!
@@ -2322,6 +2335,10 @@ type ProblemCountAggregate {
   creatorId: Int
   id: Int!
   problemText: Int
+}
+
+type ProblemCountOutputType {
+  likedBy: Int!
 }
 
 input ProblemCreateInput {
@@ -2687,4 +2704,9 @@ input StringWithAggregatesFilter {
   not: NestedStringWithAggregatesFilter
   notIn: [String!]
   startsWith: String
+}
+
+type UserCountOutputType {
+  editorPosts: Int!
+  posts: Int!
 }

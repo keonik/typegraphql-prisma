@@ -1,4 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
+import graphqlFields from "graphql-fields";
+import { GraphQLResolveInfo } from "graphql";
 import { UpdateClientArgs } from "./args/UpdateClientArgs";
 import { Client } from "../../../models/Client";
 import { transformFields, getPrismaFromContext } from "../../../helpers";
@@ -8,7 +10,23 @@ export class UpdateClientResolver {
   @TypeGraphQL.Mutation(_returns => Client, {
     nullable: true
   })
-  async updateClient(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: UpdateClientArgs): Promise<Client | null> {
-    return getPrismaFromContext(ctx).user.update(args);
+  async updateClient(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpdateClientArgs): Promise<Client | null> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).user.update({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 }

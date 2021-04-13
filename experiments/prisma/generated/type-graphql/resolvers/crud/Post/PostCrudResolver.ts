@@ -24,71 +24,231 @@ export class PostCrudResolver {
   @TypeGraphQL.Query(_returns => Post, {
     nullable: true
   })
-  async post(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: FindUniquePostArgs): Promise<Post | null> {
-    return getPrismaFromContext(ctx).post.findUnique(args);
+  async post(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindUniquePostArgs): Promise<Post | null> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).post.findUnique({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Query(_returns => Post, {
     nullable: true
   })
-  async findFirstPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: FindFirstPostArgs): Promise<Post | null> {
-    return getPrismaFromContext(ctx).post.findFirst(args);
+  async findFirstPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindFirstPostArgs): Promise<Post | null> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).post.findFirst({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Query(_returns => [Post], {
     nullable: false
   })
-  async posts(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: FindManyPostArgs): Promise<Post[]> {
-    return getPrismaFromContext(ctx).post.findMany(args);
+  async posts(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindManyPostArgs): Promise<Post[]> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).post.findMany({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => Post, {
     nullable: false
   })
-  async createPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: CreatePostArgs): Promise<Post> {
-    return getPrismaFromContext(ctx).post.create(args);
+  async createPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreatePostArgs): Promise<Post> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).post.create({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
     nullable: false
   })
-  async createManyPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: CreateManyPostArgs): Promise<AffectedRowsOutput> {
-    return getPrismaFromContext(ctx).post.createMany(args);
+  async createManyPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateManyPostArgs): Promise<AffectedRowsOutput> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).post.createMany({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => Post, {
     nullable: true
   })
-  async deletePost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: DeletePostArgs): Promise<Post | null> {
-    return getPrismaFromContext(ctx).post.delete(args);
+  async deletePost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: DeletePostArgs): Promise<Post | null> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).post.delete({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => Post, {
     nullable: true
   })
-  async updatePost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: UpdatePostArgs): Promise<Post | null> {
-    return getPrismaFromContext(ctx).post.update(args);
+  async updatePost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpdatePostArgs): Promise<Post | null> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).post.update({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
     nullable: false
   })
-  async deleteManyPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: DeleteManyPostArgs): Promise<AffectedRowsOutput> {
-    return getPrismaFromContext(ctx).post.deleteMany(args);
+  async deleteManyPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: DeleteManyPostArgs): Promise<AffectedRowsOutput> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).post.deleteMany({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
     nullable: false
   })
-  async updateManyPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: UpdateManyPostArgs): Promise<AffectedRowsOutput> {
-    return getPrismaFromContext(ctx).post.updateMany(args);
+  async updateManyPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpdateManyPostArgs): Promise<AffectedRowsOutput> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).post.updateMany({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => Post, {
     nullable: false
   })
-  async upsertPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: UpsertPostArgs): Promise<Post> {
-    return getPrismaFromContext(ctx).post.upsert(args);
+  async upsertPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpsertPostArgs): Promise<Post> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).post.upsert({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Query(_returns => AggregatePost, {

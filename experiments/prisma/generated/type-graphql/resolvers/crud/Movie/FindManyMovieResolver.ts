@@ -1,4 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
+import graphqlFields from "graphql-fields";
+import { GraphQLResolveInfo } from "graphql";
 import { FindManyMovieArgs } from "./args/FindManyMovieArgs";
 import { Movie } from "../../../models/Movie";
 import { transformFields, getPrismaFromContext } from "../../../helpers";
@@ -8,7 +10,23 @@ export class FindManyMovieResolver {
   @TypeGraphQL.Query(_returns => [Movie], {
     nullable: false
   })
-  async movies(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: FindManyMovieArgs): Promise<Movie[]> {
-    return getPrismaFromContext(ctx).movie.findMany(args);
+  async movies(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindManyMovieArgs): Promise<Movie[]> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).movie.findMany({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 }

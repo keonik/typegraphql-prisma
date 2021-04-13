@@ -24,71 +24,231 @@ export class MovieCrudResolver {
   @TypeGraphQL.Query(_returns => Movie, {
     nullable: true
   })
-  async movie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: FindUniqueMovieArgs): Promise<Movie | null> {
-    return getPrismaFromContext(ctx).movie.findUnique(args);
+  async movie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindUniqueMovieArgs): Promise<Movie | null> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).movie.findUnique({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Query(_returns => Movie, {
     nullable: true
   })
-  async findFirstMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: FindFirstMovieArgs): Promise<Movie | null> {
-    return getPrismaFromContext(ctx).movie.findFirst(args);
+  async findFirstMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindFirstMovieArgs): Promise<Movie | null> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).movie.findFirst({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Query(_returns => [Movie], {
     nullable: false
   })
-  async movies(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: FindManyMovieArgs): Promise<Movie[]> {
-    return getPrismaFromContext(ctx).movie.findMany(args);
+  async movies(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindManyMovieArgs): Promise<Movie[]> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).movie.findMany({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => Movie, {
     nullable: false
   })
-  async createMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: CreateMovieArgs): Promise<Movie> {
-    return getPrismaFromContext(ctx).movie.create(args);
+  async createMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateMovieArgs): Promise<Movie> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).movie.create({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
     nullable: false
   })
-  async createManyMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: CreateManyMovieArgs): Promise<AffectedRowsOutput> {
-    return getPrismaFromContext(ctx).movie.createMany(args);
+  async createManyMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateManyMovieArgs): Promise<AffectedRowsOutput> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).movie.createMany({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => Movie, {
     nullable: true
   })
-  async deleteMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: DeleteMovieArgs): Promise<Movie | null> {
-    return getPrismaFromContext(ctx).movie.delete(args);
+  async deleteMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: DeleteMovieArgs): Promise<Movie | null> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).movie.delete({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => Movie, {
     nullable: true
   })
-  async updateMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: UpdateMovieArgs): Promise<Movie | null> {
-    return getPrismaFromContext(ctx).movie.update(args);
+  async updateMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpdateMovieArgs): Promise<Movie | null> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).movie.update({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
     nullable: false
   })
-  async deleteManyMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: DeleteManyMovieArgs): Promise<AffectedRowsOutput> {
-    return getPrismaFromContext(ctx).movie.deleteMany(args);
+  async deleteManyMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: DeleteManyMovieArgs): Promise<AffectedRowsOutput> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).movie.deleteMany({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
     nullable: false
   })
-  async updateManyMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: UpdateManyMovieArgs): Promise<AffectedRowsOutput> {
-    return getPrismaFromContext(ctx).movie.updateMany(args);
+  async updateManyMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpdateManyMovieArgs): Promise<AffectedRowsOutput> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).movie.updateMany({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Mutation(_returns => Movie, {
     nullable: false
   })
-  async upsertMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: UpsertMovieArgs): Promise<Movie> {
-    return getPrismaFromContext(ctx).movie.upsert(args);
+  async upsertMovie(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpsertMovieArgs): Promise<Movie> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).movie.upsert({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 
   @TypeGraphQL.Query(_returns => AggregateMovie, {

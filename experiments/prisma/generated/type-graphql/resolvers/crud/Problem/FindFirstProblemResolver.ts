@@ -1,4 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
+import graphqlFields from "graphql-fields";
+import { GraphQLResolveInfo } from "graphql";
 import { FindFirstProblemArgs } from "./args/FindFirstProblemArgs";
 import { Problem } from "../../../models/Problem";
 import { transformFields, getPrismaFromContext } from "../../../helpers";
@@ -8,7 +10,23 @@ export class FindFirstProblemResolver {
   @TypeGraphQL.Query(_returns => Problem, {
     nullable: true
   })
-  async findFirstProblem(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: FindFirstProblemArgs): Promise<Problem | null> {
-    return getPrismaFromContext(ctx).problem.findFirst(args);
+  async findFirstProblem(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindFirstProblemArgs): Promise<Problem | null> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).problem.findFirst({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 }

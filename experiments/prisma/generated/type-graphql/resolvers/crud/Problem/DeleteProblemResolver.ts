@@ -1,4 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
+import graphqlFields from "graphql-fields";
+import { GraphQLResolveInfo } from "graphql";
 import { DeleteProblemArgs } from "./args/DeleteProblemArgs";
 import { Problem } from "../../../models/Problem";
 import { transformFields, getPrismaFromContext } from "../../../helpers";
@@ -8,7 +10,23 @@ export class DeleteProblemResolver {
   @TypeGraphQL.Mutation(_returns => Problem, {
     nullable: true
   })
-  async deleteProblem(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: DeleteProblemArgs): Promise<Problem | null> {
-    return getPrismaFromContext(ctx).problem.delete(args);
+  async deleteProblem(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: DeleteProblemArgs): Promise<Problem | null> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).problem.delete({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 }

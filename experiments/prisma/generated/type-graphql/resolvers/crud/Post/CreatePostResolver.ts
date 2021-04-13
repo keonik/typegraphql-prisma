@@ -1,4 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
+import graphqlFields from "graphql-fields";
+import { GraphQLResolveInfo } from "graphql";
 import { CreatePostArgs } from "./args/CreatePostArgs";
 import { Post } from "../../../models/Post";
 import { transformFields, getPrismaFromContext } from "../../../helpers";
@@ -8,7 +10,23 @@ export class CreatePostResolver {
   @TypeGraphQL.Mutation(_returns => Post, {
     nullable: false
   })
-  async createPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: CreatePostArgs): Promise<Post> {
-    return getPrismaFromContext(ctx).post.create(args);
+  async createPost(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreatePostArgs): Promise<Post> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).post.create({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 }

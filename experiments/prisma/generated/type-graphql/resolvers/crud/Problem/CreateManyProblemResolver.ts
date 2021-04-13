@@ -1,4 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
+import graphqlFields from "graphql-fields";
+import { GraphQLResolveInfo } from "graphql";
 import { CreateManyProblemArgs } from "./args/CreateManyProblemArgs";
 import { Problem } from "../../../models/Problem";
 import { AffectedRowsOutput } from "../../outputs/AffectedRowsOutput";
@@ -9,7 +11,23 @@ export class CreateManyProblemResolver {
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
     nullable: false
   })
-  async createManyProblem(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: CreateManyProblemArgs): Promise<AffectedRowsOutput> {
-    return getPrismaFromContext(ctx).problem.createMany(args);
+  async createManyProblem(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateManyProblemArgs): Promise<AffectedRowsOutput> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).problem.createMany({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 }

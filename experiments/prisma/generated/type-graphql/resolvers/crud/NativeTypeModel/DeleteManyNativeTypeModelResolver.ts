@@ -1,4 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
+import graphqlFields from "graphql-fields";
+import { GraphQLResolveInfo } from "graphql";
 import { DeleteManyNativeTypeModelArgs } from "./args/DeleteManyNativeTypeModelArgs";
 import { NativeTypeModel } from "../../../models/NativeTypeModel";
 import { AffectedRowsOutput } from "../../outputs/AffectedRowsOutput";
@@ -9,7 +11,23 @@ export class DeleteManyNativeTypeModelResolver {
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
     nullable: false
   })
-  async deleteManyNativeTypeModel(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: DeleteManyNativeTypeModelArgs): Promise<AffectedRowsOutput> {
-    return getPrismaFromContext(ctx).nativeTypeModel.deleteMany(args);
+  async deleteManyNativeTypeModel(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: DeleteManyNativeTypeModelArgs): Promise<AffectedRowsOutput> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).nativeTypeModel.deleteMany({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 }

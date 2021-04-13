@@ -1,4 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
+import graphqlFields from "graphql-fields";
+import { GraphQLResolveInfo } from "graphql";
 import { CreateManyClientArgs } from "./args/CreateManyClientArgs";
 import { Client } from "../../../models/Client";
 import { AffectedRowsOutput } from "../../outputs/AffectedRowsOutput";
@@ -9,7 +11,23 @@ export class CreateManyClientResolver {
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
     nullable: false
   })
-  async createManyClient(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: CreateManyClientArgs): Promise<AffectedRowsOutput> {
-    return getPrismaFromContext(ctx).user.createMany(args);
+  async createManyClient(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateManyClientArgs): Promise<AffectedRowsOutput> {
+    const { _count } = transformFields(
+      graphqlFields(info as any)
+    );
+    return getPrismaFromContext(ctx).user.createMany({
+      ...args,
+      ...(_count && {
+        include: {
+          _count: {
+            select: {
+              ...Object.fromEntries(
+                Object.entries(_count).filter(([_, v]) => v != null)
+              ),
+            }
+          },
+        },
+      }),
+    });
   }
 }

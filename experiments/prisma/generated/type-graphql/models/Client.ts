@@ -4,6 +4,7 @@ import { Prisma } from "../../client";
 import { DecimalJSScalar } from "../scalars";
 import { Post } from "../models/Post";
 import { Role } from "../enums/Role";
+import { UserCountOutputType } from "../resolvers/outputs/UserCountOutputType";
 
 /** User model doc */
 @TypeGraphQL.ObjectType({
@@ -56,6 +57,11 @@ export class Client {
     nullable: false
   })
   aliases!: string[];
+
+  @TypeGraphQL.Field(_type => UserCountOutputType, {
+    nullable: true
+  })
+  _count?: UserCountOutputType | null;
 
   /** renamed field doc */
   @TypeGraphQL.Field(_type => String, {

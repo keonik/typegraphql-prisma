@@ -311,6 +311,10 @@ export const generateModelsImports = createImportGenerator(modelsFolderName);
 export const generateEnumsImports = createImportGenerator(enumsFolderName);
 export const generateInputsImports = createImportGenerator(inputsFolderName);
 export const generateOutputsImports = createImportGenerator(outputsFolderName);
+// TODO: unify with generateOutputsImports
+export const generateResolversOutputsImports = createImportGenerator(
+  `${resolversFolderName}/${outputsFolderName}`,
+);
 export const generateArgsImports = createImportGenerator(argsFolderName);
 function createImportGenerator(elementsDirName: string) {
   return (sourceFile: SourceFile, elementsNames: string[], level = 1) => {
